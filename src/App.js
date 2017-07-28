@@ -1,60 +1,53 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import './App.css';
+import $ from 'jquery';
 
-let ColorDisplay = createReactClass({
-  render: function() {
-    const displayStyle = {backgroundColor: "#"+ this.props.bgCol};
+let ItemDisplay = createReactClass({
+  render() {
+    const item = this.props.data;
     return (
-      <h1 style={displayStyle}>Ganti warna latar</h1>
+      <div className="dashedBox">
+        <strong>{item.name}</strong>
+        <br/>
+        {item.phone}
+        <p>{item.company.name}<br/><small>"{item.company.catchPhrase}"</small></p>
+        <p>Alamat: {item.address.suite}, {item.address.street}, {item.address.city}</p>
+      </div>
     );
   }
 })
 
-let PresetButton = createReactClass({
-  handleClick: function(event){
-    this.props.onColorSelected(this.props.preset);
-  },
-  render: function() {
-    const displayStyle = {backgroundColor: "#" + this.props.preset};
-    return (
-      <button onClick={this.handleClick}><i style={displayStyle}></i> {this.props.preset}</button>
-    );
-  }
-})
-
-let TextInput = createReactClass({
-  handleTextInput: function(event){
-    this.props.onColorSelected(event.target.value);
-  },
-  render: function() {
-    return (
-      <input type="text" onChange={this.handleTextInput} value={this.props.currentColor}/>
-    );
-  }
-})
-
-let App = createReactClass({
+let App  = createReactClass({
   getInitialState: function() {
     return {
-      color:"ccc"
+      data:[]
     };
   },
-  handleColorSection: function(selectedColor){
-    this.setState({
-      color:selectedColor
-    });
+  componentDidMount: function() {
+    $.ajax({
+      url: "https://jsonplaceholder.typicode.com/users",
+      datatype: "json",
+      cache: false,
+      success: function (data){
+        this.setState({
+          data:data
+        });
+      }.bind(this)
+    })
   },
-  render: function(){
+  render: function() {
+    let items = this.state.data.map(function(item, index){
+      return (
+        <ItemDisplay key={index} data={item}/>
+      )
+    });
     return (
       <div>
-        <ColorDisplay bgCol={this.state.color}/>
-        <PresetButton preset="c00" onColorSelected={this.handleColorSection}/>
-        <PresetButton preset="0c0" onColorSelected={this.handleColorSection}/>
-        <PresetButton preset="00c" onColorSelected={this.handleColorSection}/>
-        <TextInput onColorSelected={this.handleColorSection} currentColor={this.state.color}/>
+        {items.length > 0 ? "" : "loading..."}
+        {items}
       </div>
-    )
+    );
   }
 })
 

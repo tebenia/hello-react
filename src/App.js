@@ -1,21 +1,26 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
+import createReactClass from 'create-react-class';
 import './App.css';
 
-class App extends Component {
-  render() {
+let Counter = createReactClass({
+  getInitialState: function() {
+    return {
+      count:0
+    };
+  },
+  handleClick: function(){
+    this.setState({
+      count:this.state.count + 1
+    });
+  },
+  render: function(){
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <button onClick={this.handleClick}>+1</button>
+        <h1>{this.state.count}</h1>
       </div>
-    );
+    )
   }
-}
+})
 
-export default App;
+export default Counter;

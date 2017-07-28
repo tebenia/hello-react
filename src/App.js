@@ -2,25 +2,30 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import './App.css';
 
-let Counter = createReactClass({
+let Timer = createReactClass({
   getInitialState: function() {
     return {
-      count:0
+      secElapsed:0
     };
   },
-  handleClick: function(){
+  componentDidMount: function(){
+    this.interval = setInterval(this.tick, 1000);
+  },
+  componentWillUnmount: function(){
+    clearInterval(this.interval);
+  },
+  tick: function(){
     this.setState({
-      count:this.state.count + 1
+      secElapsed: this.state.secElapsed + 1
     });
   },
   render: function(){
     return (
       <div>
-        <button onClick={this.handleClick}>+1</button>
-        <h1>{this.state.count}</h1>
+        <p>Detik terlewati {this.state.secElapsed}</p>
       </div>
     )
   }
 })
 
-export default Counter;
+export default Timer;
